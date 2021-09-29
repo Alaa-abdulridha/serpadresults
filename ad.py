@@ -62,9 +62,6 @@ def get_next(engine, results):
       ads = results[engine['ad_param']]
       out = out + ads
 
-    # print(f"Engine: {engine['name']}, Current: {results.get('serpapi_pagination').get('current')}")
-  return out
-  
 for engine in engines:
   params = {
     "engine": engine["name"],
@@ -77,8 +74,10 @@ for engine in engines:
   if "error" in results:
     print("oops error: ", results["error"])
     continue
-  if get_next(engine, results):
-    ad_results.append({"name": engine["name"], "value": get_next(engine, results)})
+  
+  next_results = get_next(engine, results)
+  if next_results:
+    ad_results.append({"name": engine["name"], "value": next_results})
 
 with open(output_file, 'w') as fout:
   json.dump(ad_results , fout)
